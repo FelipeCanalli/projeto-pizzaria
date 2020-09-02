@@ -27,6 +27,6 @@ O resultado final é esperado um belíssimo app funcional desenvolvido em React 
 | :----------------------------------------------: |
 |        _Molde do banco de dados no excel_        |
 
-| ![Fluxo APP](/img/fluxo-app.png) |
+| ![Fluxo APP](/img/fluxo-app.jpg) |
 | :------------------------------: |
 |  _Fluxo esperado do aplicativo_  |
