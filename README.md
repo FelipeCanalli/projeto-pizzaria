@@ -17,7 +17,7 @@ O resultado final é esperado um belíssimo app funcional desenvolvido em React 
 
 - [x] Planejar o esquema/esboço do banco de dados
 - [x] Planejar o fluxo esperado do aplicativo
-- [ ] Começar a modelar o banco
+- [x] Começar a modelar o banco e inserts manuais para teste
 
 <br>
 
