@@ -41,7 +41,15 @@ create table tbfuncionario(
     cargo VARCHAR (20) NOT NULL,
     salario DECIMAL(10 , 2 ) NOT NULL,
     idcontato INT NOT NULL,
-    idendereco INT NOT NULL
+    idendereco INT NOT NULL,
+	idlogin INT
+)ENGINE INNODB;
+
+create table tblogin(
+	idlogin INT AUTO_INCREMENT PRIMARY KEY,
+    usuario VARCHAR(30) NOT NULL unique ,
+    senha VARCHAR (200) NOT NULL,
+    perfil VARCHAR (20) NOT NULL default 'user'
 )ENGINE INNODB;
 
 create table tbproduto(
@@ -111,6 +119,13 @@ ADD CONSTRAINT `FK_funcionario_PK_contato`
   REFERENCES `dbpizzaria`.`tbendereco` (`idendereco`)
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
+  
+  ALTER TABLE `dbpizzaria`.`tbfuncionario` 
+ADD CONSTRAINT `FK_funcionario_PK_login`
+  FOREIGN KEY (`idlogin`)
+  REFERENCES `dbpizzaria`.`tblogin` (`idlogin`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
 
   -- tbpedido
   ALTER TABLE `dbpizzaria`.`tbpedido` 
@@ -170,14 +185,17 @@ ADD CONSTRAINT `FK_pagamento_PK_pedido`
  INSERT into tbcontato (telefone,celular,email) VALUES('11 4001-3158','11 99228-1211','ismael@gmail.com');
  select * from tbcontato;
 
-  
  -- tbcliente
  INSERT into tbcliente (nomecli,cpf,idcontato,idendereco) VALUES('Rogerio Limão da Silva','444.233.442-11','1','1');
  INSERT into tbcliente (nomecli,cpf,idcontato,idendereco) VALUES('Felipe Galvão Canalli','554.111.512-13','2','2'); 
  select * from tbcliente;
+
+   -- tblogin
+ INSERT into tblogin (usuario, senha) VALUES('marcelo.silva',md5('123'));
+ select * from tblogin;
  
   -- tbfuncionario
- INSERT into tbfuncionario (nomefun,cpf,cargo,salario,idcontato,idendereco) VALUES('Marcelo da Silva Junior','069.934.710-60','Atendente','1200','3','3');
+ INSERT into tbfuncionario (nomefun,cpf,cargo,salario,idcontato,idendereco,idlogin) VALUES('Marcelo da Silva Junior','069.934.710-60','Atendente','1200','3','3','1');
  INSERT into tbfuncionario (nomefun,cpf,cargo,salario,idcontato,idendereco) VALUES('Ismael Gonçalves','122.726.340-60','Chefe de cozinha','2000','4','4'); 
  select * from tbfuncionario;
 
