@@ -9,7 +9,6 @@ use dbpizzaria;
 
 create table tbendereco(
 	idendereco INT AUTO_INCREMENT PRIMARY KEY ,
-    identificador VARCHAR(20) NOT NULL,
     tipo VARCHAR(20) NOT NULL,
     logradouro VARCHAR(100) NOT NULL,
 	numero VARCHAR(10) NOT NULL, -- varchar pois pode conter letra
@@ -28,8 +27,8 @@ create table tbcontato(
 
 create table tbcliente(
 	idcliente INT AUTO_INCREMENT PRIMARY KEY,
-    nomecli VARCHAR(100) NOT NULL,
-    cpf VARCHAR (14) NOT NULL,
+    nomecliente VARCHAR(100) NOT NULL,
+    cpf VARCHAR (14) NOT NULL unique, -- unique ? !!!!!
     idcontato INT NOT NULL,
     idendereco INT NOT NULL
 )ENGINE INNODB;
@@ -38,18 +37,10 @@ create table tbfuncionario(
 	idfuncionario INT AUTO_INCREMENT PRIMARY KEY,
     nomefun VARCHAR(100) NOT NULL,
     cpf VARCHAR (14) NOT NULL,
-    cargo VARCHAR (20) NOT NULL,
-    salario DECIMAL(10 , 2 ) NOT NULL,
-    idcontato INT NOT NULL,
-    idendereco INT NOT NULL,
-	idlogin INT
-)ENGINE INNODB;
-
-create table tblogin(
-	idlogin INT AUTO_INCREMENT PRIMARY KEY,
-    usuario VARCHAR(30) NOT NULL unique ,
+	usuario VARCHAR(30) NOT NULL unique ,
     senha VARCHAR (200) NOT NULL,
-    perfil VARCHAR (20) NOT NULL default 'user'
+    perfil VARCHAR (20) NOT NULL default 'user',
+    idcontato INT NOT NULL
 )ENGINE INNODB;
 
 create table tbproduto(
@@ -64,7 +55,6 @@ create table tbpedido(
 	idpedido INT AUTO_INCREMENT PRIMARY KEY,
 	datapedido TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	idcliente INT NOT NULL,
-	idendereco INT NOT NULL,
     recebimento VARCHAR (20) NOT NULL,
     situacao VARCHAR (50) NOT NULL
 )ENGINE INNODB;
@@ -107,38 +97,17 @@ ADD CONSTRAINT `FK_cliente_PK_endereco`
   
   -- tbfuncionario
   ALTER TABLE `dbpizzaria`.`tbfuncionario` 
-ADD CONSTRAINT `FK_funcionario_PK_endereco`
+ADD CONSTRAINT `FK_funcionario_PK_contato`
   FOREIGN KEY (`idcontato`)
   REFERENCES `dbpizzaria`.`tbcontato` (`idcontato`)
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
   
-ALTER TABLE `dbpizzaria`.`tbfuncionario` 
-ADD CONSTRAINT `FK_funcionario_PK_contato`
-  FOREIGN KEY (`idendereco`)
-  REFERENCES `dbpizzaria`.`tbendereco` (`idendereco`)
-  ON DELETE NO ACTION
-  ON UPDATE NO ACTION;
-  
-  ALTER TABLE `dbpizzaria`.`tbfuncionario` 
-ADD CONSTRAINT `FK_funcionario_PK_login`
-  FOREIGN KEY (`idlogin`)
-  REFERENCES `dbpizzaria`.`tblogin` (`idlogin`)
-  ON DELETE NO ACTION
-  ON UPDATE NO ACTION;
-
   -- tbpedido
   ALTER TABLE `dbpizzaria`.`tbpedido` 
 ADD CONSTRAINT `FK_pedido_PK_cliente`
   FOREIGN KEY (`idcliente`)
   REFERENCES `dbpizzaria`.`tbcliente` (`idcliente`)
-  ON DELETE NO ACTION
-  ON UPDATE NO ACTION;
-
-  ALTER TABLE `dbpizzaria`.`tbpedido` 
-ADD CONSTRAINT `FK_pedido_PK_endereco`
-  FOREIGN KEY (`idendereco`)
-  REFERENCES `dbpizzaria`.`tbendereco` (`idendereco`)
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
 
@@ -168,35 +137,32 @@ ADD CONSTRAINT `FK_pagamento_PK_pedido`
    -- inserindo dados nas tabelas manualmente para teste de funcionalidade e relacionamentos
    
  -- tbendereco
- INSERT into tbendereco (identificador, tipo, logradouro, numero, complemento, bairro, cep, referencia) 
- VALUES('Casa','Rua','Comendador','900','casa dos fundos','Ponte Rasa','02313-100','Esquina do posto' );
- INSERT into tbendereco (identificador, tipo, logradouro, numero, complemento, bairro, cep, referencia) 
- VALUES('Minha casa','Av','Mercador filho','131','casa 1','Jd Banana','13567-500','' );
- INSERT into tbendereco (identificador, tipo, logradouro, numero, complemento, bairro, cep, referencia) 
- VALUES('Trabalho','Rua','São Miguel','11','casa 1','Jd Melancia','03567-100','' );
- INSERT into tbendereco (identificador, tipo, logradouro, numero, complemento, bairro, cep, referencia) 
- VALUES('Casa','Rua','São Franscico','611','','Jd Maça','02557-100','' );
+ INSERT into tbendereco (tipo, logradouro, numero, complemento, bairro, cep, referencia) 
+ VALUES('Rua','Comendador','900','casa dos fundos','Ponte Rasa','02313-100','Esquina do posto' );
+ INSERT into tbendereco (tipo, logradouro, numero, complemento, bairro, cep, referencia) 
+ VALUES('Av','Mercador filho','131','casa 1','Jd Banana','13567-500','' );
+ INSERT into tbendereco (tipo, logradouro, numero, complemento, bairro, cep, referencia) 
+ VALUES('Rua','São Miguel','11','casa 1','Jd Melancia','03567-100','' );
+
  select * from tbendereco;
  
   -- tbcontato
  INSERT into tbcontato (telefone,celular,email) VALUES('2320-1356','11 99837-1111','rogeriolimao@hotmail.com');
  INSERT into tbcontato (telefone,celular,email) VALUES('11 2301-3455','11 91111-1222','felipegoibada@gmail.com');
- INSERT into tbcontato (telefone,celular,email) VALUES('11 2001-3455','11 22913-1552','marceloju@gmail.com');
- INSERT into tbcontato (telefone,celular,email) VALUES('11 4001-3158','11 99228-1211','ismael@gmail.com');
+ INSERT into tbcontato (telefone,celular) VALUES('11 2001-3455','11 22913-1552');
+ INSERT into tbcontato (telefone,celular) VALUES('11 4001-3158','11 99228-1211');
+ INSERT into tbcontato (telefone,celular) VALUES('11 1233-1111','11 31231-1111');
  select * from tbcontato;
 
  -- tbcliente
- INSERT into tbcliente (nomecli,cpf,idcontato,idendereco) VALUES('Rogerio Limão da Silva','444.233.442-11','1','1');
- INSERT into tbcliente (nomecli,cpf,idcontato,idendereco) VALUES('Felipe Galvão Canalli','554.111.512-13','2','2'); 
+ INSERT into tbcliente (nomecliente,cpf,idcontato,idendereco) VALUES('Rogerio Limão da Silva','444.233.442-11','1','1');
+ INSERT into tbcliente (nomecliente,cpf,idcontato,idendereco) VALUES('Felipe Galvão Canalli','554.111.512-13','2','2'); 
  select * from tbcliente;
-
-   -- tblogin
- INSERT into tblogin (usuario, senha) VALUES('marcelo.silva',md5('123'));
- select * from tblogin;
  
   -- tbfuncionario
- INSERT into tbfuncionario (nomefun,cpf,cargo,salario,idcontato,idendereco,idlogin) VALUES('Marcelo da Silva Junior','069.934.710-60','Atendente','1200','3','3','1');
- INSERT into tbfuncionario (nomefun,cpf,cargo,salario,idcontato,idendereco) VALUES('Ismael Gonçalves','122.726.340-60','Chefe de cozinha','2000','4','4'); 
+ INSERT into tbfuncionario (nomefun,cpf,usuario,senha,idcontato) VALUES('Edilson Silva','069.934.710-60','edilson',md5("123"),'3');
+ INSERT into tbfuncionario (nomefun,cpf,usuario,senha,idcontato) VALUES('José de Assis Filho','122.726.340-60','jose.assis',md5("123"),'4'); 
+ INSERT into tbfuncionario (nomefun,cpf,usuario,senha,idcontato) VALUES('Gilson Franscisco Caetano','442.446.440-44','gilson',md5("123"),'5'); 
  select * from tbfuncionario;
 
  -- tbproduto
@@ -207,8 +173,8 @@ ADD CONSTRAINT `FK_pagamento_PK_pedido`
   select * from tbproduto;
 
  -- tbpedido
- INSERT into tbpedido (idcliente,idendereco,recebimento,situacao) VALUES('2','2','Entrega','Em andamento');
- INSERT into tbpedido (idcliente,idendereco,recebimento,situacao) VALUES('1','1','Retirada','Em andamento');
+ INSERT into tbpedido (idcliente,recebimento,situacao) VALUES('2','Entrega','Em andamento');
+ INSERT into tbpedido (idcliente,recebimento,situacao) VALUES('1','Retirada','Em andamento');
  select * from tbpedido;
 
   -- tbitenspedido
@@ -218,5 +184,13 @@ ADD CONSTRAINT `FK_pagamento_PK_pedido`
  
    -- tbpagamento
   INSERT into tbpagamento (idpedido,forma,total,troco) VALUES('1','dinheiro','27','3');
+  INSERT into tbpagamento (idpedido,forma,total,troco) VALUES('2','dinheiro','50','0');
   select * from tbpagamento;
- 
+  
+  -- Relatório de pedidos, cliente e endereço 
+   select pe.idpedido, pe.datapedido, pe.recebimento, 
+   cl.nomecliente, cl.cpf,
+   en.tipo, en.logradouro, en.numero
+   from tbpedido pe 
+   inner join tbcliente cl on pe.idcliente=cl.idcliente
+   inner join tbendereco en on cl.idendereco=en.idendereco order by idpedido desc;
