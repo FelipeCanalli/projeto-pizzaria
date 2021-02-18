@@ -10,11 +10,11 @@ $database = new Database();
 
 $db = $database->getConnection();
 
-$id=$_GET['idproduto'];
+$tipo=$_GET['tipo'];
 
 $produto = new Produto($db);
 
-$rs = $produto->detalhar($id);
+$rs = $produto->listarTipo($tipo);
 
 if($rs->rowCount()>0){
     $produto_arr["saida"]=array();

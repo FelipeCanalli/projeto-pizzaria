@@ -10,11 +10,12 @@ $database = new Database();
 
 $db = $database->getConnection();
 
-$id=$_GET['idproduto'];
+$metade1=$_GET['primeirametade'];
+$metade2=$_GET['segundametade'];
 
 $produto = new Produto($db);
 
-$rs = $produto->detalhar($id);
+$rs = $produto->detalharDuplo($metade1, $metade2);
 
 if($rs->rowCount()>0){
     $produto_arr["saida"]=array();
@@ -23,7 +24,6 @@ if($rs->rowCount()>0){
     
         $array_item = array(
             "idproduto"=>$linha["idproduto"],
-            "tipo"=>$linha["tipo"],
             "nomeproduto"=>$linha["nomeproduto"],
             "descricao"=>$linha["descricao"],
             "preco"=>$linha["preco"]
